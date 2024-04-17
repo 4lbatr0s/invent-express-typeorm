@@ -16,11 +16,12 @@ class Helper{
         return secondHash;
     }
     createAccessToken(user){//TIP: we should specify name for jwt.sign, otherwise throws error.
-        const {password, ...others} = user._doc;
+        const {password, ...others} = user;
+        console.log(`accestoken: ${process.env.ACCESS_TOKEN_SECRET_KEY}`);
         return JWT.sign({name:user.full_name, ...others}, process.env.ACCESS_TOKEN_SECRET_KEY, {expiresIn:"1w"});
     }
     createRefreshToken(user){
-        const {password, ...others} = user._doc;
+        const {password, ...others} = user;
         return JWT.sign({name:user.full_name, ...others}, process.env.REFRESH_TOKEN_SECRET_KEY);
     }
     createPassword(){

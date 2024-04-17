@@ -1,24 +1,27 @@
-class BaseService{
-    async findAll(where){
-        return await this.model.find(where || {}); //TIP: with where, we can use filters for lists(bring with user id etc..)
+class BaseService {
+    constructor(repository) {
+        this.repository = repository;
     }
-    async add(item){
-        return await this.model.create(item);
+
+    async findAll(where) {
+        return await this.repository.find(where);
     }
-    async delete(itemId){
-        return await this.model.findByIdAndDelete(itemId);
+
+    async add(item) {
+        return await this.repository.save(item);
     }
-    async saveModel(){
-        return await this.model.save();
+
+    async delete(itemId) {
+        return await this.repository.delete(itemId);
     }
-    async find(itemId=1){
-        return await this.model.findById(itemId);
+
+    async find(id) {
+        return await this.repository.findOne({ where: { id } });
     }
-    async update(where, updateInfo){
-        return await this.model.findOneAndUpdate(where,updateInfo, {
-            new:true, //INFO: response should contain the updated object
-            runValidators:true //INFO: update should run the validation rules.
-        });
+
+    async update(where, updateInfo) {
+        await this.repository.update(where, updateInfo);
+        return await this.repository.findOne({ where });
     }
 }
 

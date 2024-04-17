@@ -1,17 +1,15 @@
-import Mongoose from "mongoose";
+import dataSource from "../config/db.js";
 
-const db = Mongoose.connection;
+const connectDB = () => {
+  return dataSource.initialize()
+    .then(() => {
+      console.log("Database connection established");
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+      throw error; // Rethrow the error to propagate it to the caller
+    });
+};
 
-db.once("open", ()=>{
-    console.log("Successfully connected to mongodb");
-})
 
-
-const connectDB =  async () => {
-    await Mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, {
-        useNewUrlParser:true, //tells mongoose to use the latest url parser.
-        useUnifiedTopology:true //tells mongoose to use the newest server discovery and monitoring engine
-    });     
-}
-
-export {connectDB,} 
+export { connectDB };
